@@ -37,7 +37,7 @@ regd_users.post("/login", (req,res) => {
     req.session.authorization = {
         accessToken,username
     }
-    return res.status(200).send("user successfully logged in");
+    return res.status(200).send("Login successful!");
   } else {
     return res.status(208).json({message:"invalid login, check username and password"});
   }
@@ -45,25 +45,25 @@ regd_users.post("/login", (req,res) => {
 });
 
 // Add a book review
-regd_users.put("/auth/review/:isbn", (req, res) => {
+regd_users.put("/review/:isbn", (req, res) => {
   //Write your code here
   const isbn = req.params.isbn;
   const review = req.query.review;
   const username = req.session.authorization.username;
   if (books[isbn]) {
     books[isbn].reviews[username] = review;
-    return res.status(200).send(`review for isbn ${isbn} has added by ${username}`);
+    return res.status(200).send(`Review for ISBN ${isbn} added/updated successfully`);
 }  else {
     return res.status(404).json({message: "book not found"});
 } 
 });
-regd_users.delete("/auth/review/:isbn", (req, res) => {
+regd_users.delete("/review/:isbn", (req, res) => {
     const isbn = req.params.isbn;
     const username = req.session.authorization.username;
     if(books[isbn]){
         if(books[isbn].reviews[username]){
             delete books[isbn].reviews[username];
-            return res.status(200).send(`review for isbn ${isbn} by ${username} has deleted`);
+            return res.status(200).send(`Review for ISBN ${isbn} deleted`);
         } else {
             return res.status(404).json({message: "no review found for user"});
         }
