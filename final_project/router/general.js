@@ -68,6 +68,16 @@ public_users.get('/author/:author',function (req, res) {
   return res.status(200).send(JSON.stringify(books_Author, null,4));
 });
 
+public_users.get('/async-author/:author',async function (req, res) {
+    //Write your code here
+    try{
+      const author= req.params.author;
+      const response = await axios.get(`http://localhost:5000/author/${author}`);
+      return res.status(200).send(JSON.stringify(response.data, null, 4));
+  } catch(error){
+      return res.status(500).json({ message: "Error fetching book by author", error: error.message });
+  }
+  });
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
   //Write your code here
