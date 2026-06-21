@@ -20,11 +20,27 @@ public_users.post("/register", (req,res) => {
   }
   return res.status(404).json({message: "unable to register , username and password are required"});
 });
+// Get the book list available in the shop
+public_users.get('/', function (req, res) {
+    return res.status(200).send(JSON.stringify(books, null, 4));
+});
+
+// Get book details based on ISBN
+public_users.get('/isbn/:isbn', function (req, res) {
+    const isbn = req.params.isbn;
+    return res.status(200).send(JSON.stringify(books[isbn], null, 4));
+});
 
 // Get the book list available in the shop
-public_users.get('/',function (req, res) {
+public_users.get('/async-isbn/:isbn',async function (req, res) {
   //Write your code here
-  return res.status(200).send(JSON.stringify(books, null, 4));
+  try{
+    const isbn= req.params.isbn;
+    const response = await axios.get(`http://localhost:5000/isbn/${isbn}`);
+    return res.status(200).send(JSON.stringify(response.data, null, 4));
+} catch(error){
+    return res.status(500).json({ message: "Error fetching book", error: error.message });
+}
 });
 
 // Get book details based on ISBN
